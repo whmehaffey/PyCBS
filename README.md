@@ -12,3 +12,12 @@ PyQt4:
 https://www.riverbankcomputing.com/software/pyqt/download
 PyQtGraph:
 http://www.pyqtgraph.org/
+
+
+Or there's a compiled Win32 version. 
+
+From the original documentation of the orignal CBS (Catch Bird Singing, by David Perkel), 
+
+"Also, I am not a programmer, so I don't want to hear complaints.  I know it
+isn't written well.  However, I would love to hear suggestions, even things
+that may seem obvious."
