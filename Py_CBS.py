@@ -130,6 +130,7 @@ GlobalVars.filename='birdname'
 GlobalVars.inputdeviceindex=0
 GlobalVars.Stereo=False;
 GlobalVars.ThreshChan='left'
+GlobalVars.CHANNELS=1;
 
 
 
