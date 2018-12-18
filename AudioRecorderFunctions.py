@@ -63,16 +63,19 @@ def TriggeredRecordAudio(ui):
 
  p = pyaudio.PyAudio()
 
+ GlobalVars.CHANNELS=1;
+  
+
  if GlobalVars.Stereo:
-        CHANNELS=2
+         GlobalVars.CHANNELS=2
  else:
-        CHANNELS=1
+         GlobalVars.CHANNELS=1
 #if not GlobalVars.Stereo:
 
         
     
  
- stream=p.open(format=FORMAT,input_device_index=GlobalVars.inputdeviceindex,channels=CHANNELS,rate=RATE,
+ stream=p.open(format=FORMAT,input_device_index=GlobalVars.inputdeviceindex,channels=GlobalVars.CHANNELS,rate=RATE,
                input=True,
                frames_per_buffer=CHUNK)
 
@@ -103,7 +106,7 @@ def TriggeredRecordAudio(ui):
       QtGui.qApp.processEvents()
 
 
-  if (CHANNELS==2):
+  if (GlobalVars.CHANNELS==2):
       
       left=audioop.tomono(cur_data,2,1,0)
       right=audioop.tomono(cur_data,2,0,1)
@@ -117,7 +120,7 @@ def TriggeredRecordAudio(ui):
       #print str(audioop.rms(thresh,2))
 
 
-  if (CHANNELS==1):      
+  if (GlobalVars.CHANNELS==1):      
       slid_win.append(audioop.rms(cur_data, 2))
       #print str(audioop.rms(cur_data, 2))
 
@@ -173,7 +176,7 @@ def save_audio(data):
  
  data = ''.join(data)
  wf = wave.open(filename + '.wav', 'wb')
- wf.setnchannels(CHANNELS);
+ wf.setnchannels(GlobalVars.CHANNELS);
  wf.setsampwidth(2)
  wf.setframerate(RATE) 
  wf.writeframes(data)

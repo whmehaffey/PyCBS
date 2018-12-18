@@ -10,3 +10,4 @@ global buffertime
 global path
 global Stereo
 global ThreshChan
+global CHANNELS
