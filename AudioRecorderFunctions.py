@@ -1,5 +1,5 @@
 
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 
 import pyaudio 
 import wave
@@ -10,6 +10,7 @@ import time
 import math
 import GlobalVars
 import copy
+global graph_win
 #from numpy import arange, sin, pi
 #from numpy import histogram as hist
 import pyqtgraph as pg
@@ -50,9 +51,11 @@ def RescanInputs():
     GlobalVars.numdevices=inputdevices
     p.terminate()
 
+
 def TriggeredRecordAudio(ui):
 
  import GlobalVars
+ global graph_win
  
  MIN_DUR=GlobalVars.buffertime*2+0.1;#
  #isRunning 
@@ -65,15 +68,10 @@ def TriggeredRecordAudio(ui):
 
  GlobalVars.CHANNELS=1;
   
-
  if GlobalVars.Stereo:
          GlobalVars.CHANNELS=2
  else:
-         GlobalVars.CHANNELS=1
-#if not GlobalVars.Stereo:
-
-        
-    
+         GlobalVars.CHANNELS=1          
  
  stream=p.open(format=FORMAT,input_device_index=GlobalVars.inputdeviceindex,channels=GlobalVars.CHANNELS,rate=RATE,
                input=True,
@@ -82,15 +80,27 @@ def TriggeredRecordAudio(ui):
     
  ui.ListeningTextBox.setText('<span style="color:green">quiet</span>')
  audio2send = []
+ 
  #cur_data = '' # current chunk of audio data
  rel = RATE/CHUNK
  slid_win = deque(maxlen=SILENCE_LIMIT * rel) #amplitude threshold running buffer
  prev_audio = deque(maxlen=PREV_AUDIO * rel) #prepend audio running buffer
  perm_win = deque(maxlen=PREV_AUDIO*rel)
+
+ graph_win = deque(maxlen=25);
  started = False
  cur_data=stream.read(CHUNK)
 
+ #pg.setConfigOptions(useOpenGL=True)
 
+ def updateGraph():        
+       ui.GraphWidget.plot(graph_win, width=1, clear=True)
+    
+
+ timer = pg.QtCore.QTimer()
+ timer.timeout.connect(updateGraph)
+ timer.start(100)
+ 
  count=1;
  
  while (GlobalVars.isRunning==1):
@@ -117,16 +127,18 @@ def TriggeredRecordAudio(ui):
           thresh=right
           
       slid_win.append(audioop.rms(thresh, 2))
+      graph_win.append(audioop.rms(cur_data, 2))      
       #print str(audioop.rms(thresh,2))
 
 
-  if (GlobalVars.CHANNELS==1):      
+  if (GlobalVars.CHANNELS==1):
+      graph_win.append(audioop.rms(cur_data, 2))
       slid_win.append(audioop.rms(cur_data, 2))
       #print str(audioop.rms(cur_data, 2))
 
 
-  ui.GraphWidget.clear();
-  ui.GraphWidget.plot(slid_win);
+  #ui.GraphWidget.clear();
+  #ui.GraphWidget.plot(graph_win, pen=1, width=1) #plot(slid_win);
 
     
   

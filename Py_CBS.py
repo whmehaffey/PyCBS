@@ -40,7 +40,7 @@ def StopPushButton():
         ui.radioButton_3.setEnabled(True)
 
 def StartPushButton():
-    import threading
+
     import GlobalVars
     
     ui.StartPushButton.setEnabled(False)
@@ -55,7 +55,7 @@ def StartPushButton():
     ui.radioButton_3.setEnabled(False);    
     
     GlobalVars.isRunning=1
-   # threading.Thread(target=TriggeredRecordAudio, args=arg1).start()
+
     TriggeredRecordAudio(ui)
     
 
